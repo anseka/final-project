@@ -1,0 +1,9 @@
+/* 
+// src/components/WordCard.css */
+.word-card {
+	border: 1px solid #ddd;
+	padding: 1rem;
+	margin: 0.5rem;
+	border-radius: 5px;
+	background: #f9f9f9;
+}
