@@ -1,9 +1,12 @@
-/* 
-// src/components/WordCard.css */
 .word-card {
 	border: 1px solid #ddd;
 	padding: 1rem;
 	margin: 0.5rem;
 	border-radius: 5px;
 	background: #f9f9f9;
+	transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.word-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
