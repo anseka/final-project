@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import WordCard from '../WordCard/WordCard';
 import './WordList.css';
 
 const WordList = () => {
@@ -10,6 +11,7 @@ const WordList = () => {
 	const [editWordId, setEditWordId] = useState(null);
 	const [editEnglish, setEditEnglish] = useState('');
 	const [editRussian, setEditRussian] = useState('');
+	const [originalWord, setOriginalWord] = useState(null);
 
 	useEffect(() => {
 		fetch('http://itgirlschool.justmakeit.ru/api/words')
@@ -36,9 +38,10 @@ const WordList = () => {
 	const handleAdd = () => {
 		if (!newEnglish || !newRussian) return;
 		const newWord = {
-			id: Date.now(), // Временный ID
+			id: Date.now(),
 			english: newEnglish,
 			russian: newRussian,
+			transcription: 'N/A',
 		};
 		setWords([...words, newWord]);
 		setNewEnglish('');
@@ -49,6 +52,7 @@ const WordList = () => {
 		setEditWordId(word.id);
 		setEditEnglish(word.english);
 		setEditRussian(word.russian);
+		setOriginalWord(word);
 	};
 
 	const handleSave = (id) => {
@@ -60,6 +64,14 @@ const WordList = () => {
 			)
 		);
 		setEditWordId(null);
+		setOriginalWord(null);
+	};
+
+	const handleCancel = () => {
+		setEditWordId(null);
+		setEditEnglish(originalWord.english);
+		setEditRussian(originalWord.russian);
+		setOriginalWord(null);
 	};
 
 	if (loading) return <p>Загрузка...</p>;
@@ -81,6 +93,16 @@ const WordList = () => {
 					onChange={(e) => setNewRussian(e.target.value)}
 				/>
 				<button onClick={handleAdd}>Добавить</button>
+			</div>
+			<div className='word-cards-container'>
+				{words.map((word) => (
+					<WordCard
+						key={word.id}
+						english={word.english}
+						russian={word.russian}
+						transcription={word.transcription || 'N/A'}
+					/>
+				))}
 			</div>
 			<table className='word-table'>
 				<thead>
@@ -117,11 +139,16 @@ const WordList = () => {
 							</td>
 							<td>
 								{editWordId === word.id ? (
-									<button
-										className='save-btn'
-										onClick={() => handleSave(word.id)}>
-										Сохранить
-									</button>
+									<>
+										<button
+											className='save-btn'
+											onClick={() => handleSave(word.id)}>
+											Сохранить
+										</button>
+										<button className='cancel-btn' onClick={handleCancel}>
+											Отмена
+										</button>
+									</>
 								) : (
 									<button className='edit-btn' onClick={() => handleEdit(word)}>
 										Редактировать
