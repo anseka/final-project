@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WordCard from '../WordCard/WordCard';
+import WordCarousel from '../WordCarousel/WordCarousel';
 import './WordList.css';
 
 const WordList = () => {
@@ -79,6 +80,7 @@ const WordList = () => {
 
 	return (
 		<div>
+			<WordCarousel words={words} />
 			<div className='add-word-form'>
 				<input
 					type='text'

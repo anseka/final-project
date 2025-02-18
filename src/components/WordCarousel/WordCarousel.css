@@ -1,0 +1,95 @@
+.word-carousel {
+	text-align: center;
+	margin: 1rem auto;
+	width: 35%;
+	padding: 1rem;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navigation-buttons {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	width: 100%;
+	padding: 0 1rem;
+}
+
+.nav-btn {
+	font-size: 2rem;
+	border: 1px solid #ddd;
+	/* background-color: #fff; */
+	text-align: center;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+	background-color: #007bff;
+	color: white;
+}
+
+.nav-btn:focus {
+	outline: none;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.card-container {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.card {
+	opacity: 0;
+	transform: translateX(100%);
+	transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.card.show {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.card.hide {
+	opacity: 0;
+	transform: translateX(-100%);
+}
+
+.navigation-buttons {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	width: 100%;
+	padding: 0 1rem;
+}
+
+.nav-btn {
+	font-size: 2rem;
+	border: 1px solid #ddd;
+	text-align: center;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+	background-color: #007bff;
+	color: white;
+}
+
+.nav-btn:focus {
+	outline: none;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
