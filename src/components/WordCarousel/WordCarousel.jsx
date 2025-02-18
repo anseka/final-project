@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import WordCard from '../WordCard/WordCard';
 import './WordCarousel.css';
-
 const WordCarousel = ({ words, initialIndex = 0 }) => {
 	const [currentIndex, setCurrentIndex] = useState(initialIndex);
 	const [animationState, setAnimationState] = useState('show');
-
 	const handleNext = () => {
 		setAnimationState('hide');
 		setTimeout(() => {
@@ -16,7 +14,6 @@ const WordCarousel = ({ words, initialIndex = 0 }) => {
 			setAnimationState('show');
 		}, 500);
 	};
-
 	const handlePrevious = () => {
 		setAnimationState('hide');
 		setTimeout(() => {
@@ -26,11 +23,9 @@ const WordCarousel = ({ words, initialIndex = 0 }) => {
 			setAnimationState('show');
 		}, 500);
 	};
-
 	if (words.length === 0) {
 		return <p>Нет доступных слов.</p>;
 	}
-
 	return (
 		<div className='word-carousel'>
 			<div className='card-container'>
@@ -53,15 +48,12 @@ const WordCarousel = ({ words, initialIndex = 0 }) => {
 		</div>
 	);
 };
-
 WordCarousel.defaultProps = {
 	words: [],
 	initialIndex: 0,
 };
-
 WordCarousel.propTypes = {
 	words: PropTypes.array.isRequired,
 	initialIndex: PropTypes.number,
 };
-
 export default WordCarousel;

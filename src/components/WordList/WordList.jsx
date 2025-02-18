@@ -76,11 +76,13 @@ const WordList = () => {
 	};
 
 	if (loading) return <p>Загрузка...</p>;
+
 	if (error) return <p>Ошибка: {error}</p>;
 
 	return (
 		<div>
-			<WordCarousel words={words} />
+			<WordCarousel words={words} />{' '}
+			{/* Рендерим carousel только если данные загружены */}
 			<div className='add-word-form'>
 				<input
 					type='text'
@@ -97,15 +99,20 @@ const WordList = () => {
 				<button onClick={handleAdd}>Добавить</button>
 			</div>
 			<div className='word-cards-container'>
-				{words.map((word) => (
-					<WordCard
-						key={word.id}
-						english={word.english}
-						russian={word.russian}
-						transcription={word.transcription || 'N/A'}
-					/>
-				))}
+				{words.length > 0 ? (
+					words.map((word) => (
+						<WordCard
+							key={word.id}
+							english={word.english}
+							russian={word.russian}
+							transcription={word.transcription || 'N/A'}
+						/>
+					))
+				) : (
+					<p>Нет слов для отображения.</p>
+				)}
 			</div>
+			<h1>Таблица слов</h1>
 			<table className='word-table'>
 				<thead>
 					<tr>

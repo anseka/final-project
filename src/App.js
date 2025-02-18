@@ -1,19 +1,24 @@
 import React from 'react';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import WordList from './components/WordList/WordList';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar/Navbar';
+import HomePage from './components/HomePage/HomePage';
+import GamePage from './components/GamePage/GamePage';
+// import WordList from './components/WordList/WordList';
 
-const App = () => {
+function App() {
 	return (
-		<div className='app'>
-			<Header />
-			<main>
-				<WordList />
-			</main>
-			<Footer />
-		</div>
+		<Router>
+			<Navbar />
+			<div style={{ marginTop: '60px' }}>
+				{' '}
+				{/* Чтобы меню не перекрывало контент */}
+				<Routes>
+					<Route path='/' element={<HomePage />} />
+					<Route path='/game' element={<GamePage />} />
+				</Routes>
+			</div>
+		</Router>
 	);
-};
+}
 
 export default App;

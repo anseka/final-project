@@ -6,7 +6,6 @@
 	border-radius: 5px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .navigation-buttons {
 	position: absolute;
 	top: 50%;
@@ -17,7 +16,6 @@
 	width: 100%;
 	padding: 0 1rem;
 }
-
 .nav-btn {
 	font-size: 2rem;
 	border: 1px solid #ddd;
@@ -27,17 +25,14 @@
 	cursor: pointer;
 	transition: background-color 0.3s ease;
 }
-
 .nav-btn:hover {
 	background-color: #007bff;
 	color: white;
 }
-
 .nav-btn:focus {
 	outline: none;
 	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-
 .card-container {
 	position: relative;
 	display: flex;
@@ -47,23 +42,19 @@
 	height: 100%;
 	overflow: hidden;
 }
-
 .card {
 	opacity: 0;
 	transform: translateX(100%);
 	transition: opacity 0.5s ease, transform 0.5s ease;
 }
-
 .card.show {
 	opacity: 1;
 	transform: translateX(0);
 }
-
 .card.hide {
 	opacity: 0;
 	transform: translateX(-100%);
 }
-
 .navigation-buttons {
 	position: absolute;
 	top: 50%;
@@ -74,7 +65,6 @@
 	width: 100%;
 	padding: 0 1rem;
 }
-
 .nav-btn {
 	font-size: 2rem;
 	border: 1px solid #ddd;
@@ -83,12 +73,10 @@
 	cursor: pointer;
 	transition: background-color 0.3s ease;
 }
-
 .nav-btn:hover {
 	background-color: #007bff;
 	color: white;
 }
-
 .nav-btn:focus {
 	outline: none;
 	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
