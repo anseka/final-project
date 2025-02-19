@@ -5,6 +5,7 @@ const GamePage = () => {
 	const [words, setWords] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [learnedWords, setLearnedWords] = useState(new Set());
 
 	useEffect(() => {
 		fetch('http://itgirlschool.justmakeit.ru/api/words')
@@ -24,14 +25,22 @@ const GamePage = () => {
 			});
 	}, []);
 
-	if (loading) return <p>Загрузка...</p>;
+	const handleLearnedWord = (wordId) => {
+		setLearnedWords((prev) => new Set(prev).add(wordId));
+	};
 
+	if (loading) return <p>Загрузка...</p>;
 	if (error) return <p>Ошибка: {error}</p>;
 
 	return (
 		<div>
 			<h1>Карточки для изучения слов</h1>
-			<WordCarousel words={words} />
+			<p>Изучено слов: {learnedWords.size}</p>
+			<WordCarousel
+				words={words}
+				onLearnedWord={handleLearnedWord}
+				learnedWords={learnedWords}
+			/>
 		</div>
 	);
 };

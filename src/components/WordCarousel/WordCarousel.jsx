@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import WordCard from '../WordCard/WordCard';
 import './WordCarousel.css';
-const WordCarousel = ({ words, initialIndex = 0 }) => {
+
+const WordCarousel = ({
+	words,
+	initialIndex = 0,
+	onLearnedWord,
+	learnedWords,
+}) => {
 	const [currentIndex, setCurrentIndex] = useState(initialIndex);
 	const [animationState, setAnimationState] = useState('show');
+
 	const handleNext = () => {
 		setAnimationState('hide');
 		setTimeout(() => {
@@ -14,6 +21,7 @@ const WordCarousel = ({ words, initialIndex = 0 }) => {
 			setAnimationState('show');
 		}, 500);
 	};
+
 	const handlePrevious = () => {
 		setAnimationState('hide');
 		setTimeout(() => {
@@ -23,17 +31,22 @@ const WordCarousel = ({ words, initialIndex = 0 }) => {
 			setAnimationState('show');
 		}, 500);
 	};
+
 	if (words.length === 0) {
 		return <p>Нет доступных слов.</p>;
 	}
+
 	return (
 		<div className='word-carousel'>
 			<div className='card-container'>
 				<div className={`card ${animationState}`}>
 					<WordCard
+						wordId={words[currentIndex].id}
 						english={words[currentIndex].english}
 						russian={words[currentIndex].russian}
 						transcription={words[currentIndex].transcription || 'N/A'}
+						onLearnedWord={onLearnedWord}
+						learnedWords={learnedWords}
 					/>
 				</div>
 				<div className='navigation-buttons'>
@@ -48,12 +61,12 @@ const WordCarousel = ({ words, initialIndex = 0 }) => {
 		</div>
 	);
 };
-WordCarousel.defaultProps = {
-	words: [],
-	initialIndex: 0,
-};
+
 WordCarousel.propTypes = {
 	words: PropTypes.array.isRequired,
 	initialIndex: PropTypes.number,
+	onLearnedWord: PropTypes.func.isRequired,
+	learnedWords: PropTypes.instanceOf(Set).isRequired,
 };
+
 export default WordCarousel;

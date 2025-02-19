@@ -1,8 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './WordCard.css';
 
-const WordCard = ({ english, russian, transcription }) => {
+const WordCard = ({
+	english,
+	russian,
+	transcription,
+	onLearnedWord,
+	wordId,
+	learnedWords = new Set(),
+}) => {
 	const [showTranslation, setShowTranslation] = useState(false);
+	const buttonRef = useRef(null);
+
+	useEffect(() => {
+		setShowTranslation(false);
+		setTimeout(() => {
+			if (buttonRef.current) {
+				buttonRef.current.focus();
+			}
+		}, 100); // Небольшая задержка для корректного автофокуса
+	}, [wordId]);
+
+	const handleToggleTranslation = () => {
+		setShowTranslation((prev) => !prev);
+		if (onLearnedWord && !learnedWords.has(wordId)) {
+			onLearnedWord(wordId);
+		}
+	};
 
 	return (
 		<div className='word-card'>
@@ -15,8 +39,9 @@ const WordCard = ({ english, russian, transcription }) => {
 				<p className='translation'>{russian}</p>
 			</div>
 			<button
+				ref={buttonRef}
 				className='toggle-translation'
-				onClick={() => setShowTranslation(!showTranslation)}>
+				onClick={handleToggleTranslation}>
 				{showTranslation ? 'Скрыть перевод' : 'Показать перевод'}
 			</button>
 		</div>

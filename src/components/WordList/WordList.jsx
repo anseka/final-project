@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import WordCard from '../WordCard/WordCard';
-import WordCarousel from '../WordCarousel/WordCarousel';
+// import WordCard from '../WordCard/WordCard';
+// import WordCarousel from '../WordCarousel/WordCarousel';
 import './WordList.css';
 
 const WordList = () => {
@@ -81,38 +81,7 @@ const WordList = () => {
 
 	return (
 		<div>
-			<WordCarousel words={words} />{' '}
-			{/* Рендерим carousel только если данные загружены */}
-			<div className='add-word-form'>
-				<input
-					type='text'
-					placeholder='Слово на английском'
-					value={newEnglish}
-					onChange={(e) => setNewEnglish(e.target.value)}
-				/>
-				<input
-					type='text'
-					placeholder='Перевод'
-					value={newRussian}
-					onChange={(e) => setNewRussian(e.target.value)}
-				/>
-				<button onClick={handleAdd}>Добавить</button>
-			</div>
-			<div className='word-cards-container'>
-				{words.length > 0 ? (
-					words.map((word) => (
-						<WordCard
-							key={word.id}
-							english={word.english}
-							russian={word.russian}
-							transcription={word.transcription || 'N/A'}
-						/>
-					))
-				) : (
-					<p>Нет слов для отображения.</p>
-				)}
-			</div>
-			<h1>Таблица слов</h1>
+			{/* <h1>Таблица слов</h1> */}
 			<table className='word-table'>
 				<thead>
 					<tr>
