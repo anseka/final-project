@@ -19,7 +19,7 @@ const WordList = () => {
 		if (!loading) {
 			const timer = setTimeout(() => {
 				setShowLoading(false);
-			}, 1000);
+			}, 1000); // задержка для показа анимации загрузки
 			return () => clearTimeout(timer);
 		}
 	}, [loading]);

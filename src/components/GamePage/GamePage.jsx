@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import WordCarousel from '../WordCarousel/WordCarousel';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 const GamePage = () => {
 	const [words, setWords] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [learnedWords, setLearnedWords] = useState(new Set());
+	const [showLoading, setShowLoading] = useState(true);
 
 	useEffect(() => {
 		fetch('http://itgirlschool.justmakeit.ru/api/words')
@@ -25,12 +28,21 @@ const GamePage = () => {
 			});
 	}, []);
 
+	useEffect(() => {
+		if (!loading) {
+			const timer = setTimeout(() => {
+				setShowLoading(false);
+			}, 1000); // задержка для показа анимации загрузки
+			return () => clearTimeout(timer);
+		}
+	}, [loading]);
+
+	if (showLoading) return <LoadingSpinner />;
+	if (error) return <ErrorMessage message={error} />;
+
 	const handleLearnedWord = (wordId) => {
 		setLearnedWords((prev) => new Set(prev).add(wordId));
 	};
-
-	if (loading) return <p>Загрузка...</p>;
-	if (error) return <p>Ошибка: {error}</p>;
 
 	return (
 		<div>
