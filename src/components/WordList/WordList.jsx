@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { WordContext } from '../WordContext/WordContext';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './WordList.css';
 
 const WordList = () => {
-	const [words, setWords] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+	const { words, loading, error, addWord, updateWord, deleteWord } =
+		useContext(WordContext);
+	const [showLoading, setShowLoading] = useState(true);
 	const [editWordId, setEditWordId] = useState(null);
 	const [editEnglish, setEditEnglish] = useState('');
 	const [editRussian, setEditRussian] = useState('');
-	const [originalWord, setOriginalWord] = useState(null);
-	const [hasErrors, setHasErrors] = useState(false);
 	const [newEnglish, setNewEnglish] = useState('');
 	const [newRussian, setNewRussian] = useState('');
+	const [hasErrors, setHasErrors] = useState(false);
 
 	useEffect(() => {
-		fetch('http://itgirlschool.justmakeit.ru/api/words')
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Ошибка загрузки данных');
-				}
-				return response.json();
-			})
-			.then((data) => {
-				setWords(data);
-				setLoading(false);
-			})
-			.catch((error) => {
-				setError(error.message);
-				setLoading(false);
-			});
-	}, []);
+		if (!loading) {
+			const timer = setTimeout(() => {
+				setShowLoading(false);
+			}, 1000);
+			return () => clearTimeout(timer);
+		}
+	}, [loading]);
+
+	if (showLoading) return <LoadingSpinner />;
+	if (error) return <ErrorMessage message={error} />;
 
 	const handleEdit = (word) => {
 		setEditWordId(word.id);
 		setEditEnglish(word.english);
 		setEditRussian(word.russian);
-		setOriginalWord(word);
 		setHasErrors(false);
 	};
 
@@ -44,51 +39,17 @@ const WordList = () => {
 			setHasErrors(true);
 			return;
 		}
-		console.log('Сохранено:', {
-			id,
-			english: editEnglish,
-			russian: editRussian,
-		});
-		setWords(
-			words.map((word) =>
-				word.id === id
-					? { ...word, english: editEnglish, russian: editRussian }
-					: word
-			)
-		);
+		updateWord(id, { id, english: editEnglish, russian: editRussian });
 		setEditWordId(null);
 		setHasErrors(false);
-	};
-
-	const handleCancel = () => {
-		setEditWordId(null);
-		setEditEnglish(originalWord.english);
-		setEditRussian(originalWord.russian);
-		setHasErrors(false);
-	};
-
-	const handleDelete = (id) => {
-		setWords((prevWords) => {
-			const updatedWords = prevWords.filter((word) => word.id !== id);
-			return updatedWords;
-		});
 	};
 
 	const handleAdd = () => {
 		if (!newEnglish.trim() || !newRussian.trim()) return;
-		const newWord = {
-			id: Date.now(),
-			english: newEnglish,
-			russian: newRussian,
-		};
-		setWords([...words, newWord]);
+		addWord({ id: Date.now(), english: newEnglish, russian: newRussian });
 		setNewEnglish('');
 		setNewRussian('');
 	};
-
-	if (loading) return <p>Загрузка...</p>;
-	if (error || words.length === 0)
-		return <p className='no-words-message'>Доступных слов нет.</p>;
 
 	return (
 		<div>
@@ -171,7 +132,9 @@ const WordList = () => {
 												disabled={!editEnglish.trim() || !editRussian.trim()}>
 												Сохранить
 											</button>
-											<button className='cancel-btn' onClick={handleCancel}>
+											<button
+												className='cancel-btn'
+												onClick={() => setEditWordId(null)}>
 												Отмена
 											</button>
 										</>
@@ -184,7 +147,7 @@ const WordList = () => {
 											</button>
 											<button
 												className='delete-btn'
-												onClick={() => handleDelete(word.id)}>
+												onClick={() => deleteWord(word.id)}>
 												Удалить
 											</button>
 										</>

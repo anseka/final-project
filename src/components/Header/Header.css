@@ -13,14 +13,12 @@
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Логотип */
 .logo {
 	font-size: 1.5rem;
 	font-weight: bold;
 	cursor: pointer;
 }
 
-/* Ссылки в меню */
 .nav-links {
 	list-style: none;
 	display: flex;

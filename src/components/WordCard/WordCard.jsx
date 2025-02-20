@@ -18,7 +18,7 @@ const WordCard = ({
 			if (buttonRef.current) {
 				buttonRef.current.focus();
 			}
-		}, 100); // Небольшая задержка для корректного автофокуса
+		}, 100);
 	}, [wordId]);
 
 	const handleToggleTranslation = () => {
