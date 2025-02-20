@@ -46,27 +46,56 @@ const WordProvider = ({ children }) => {
 
 	const updateWord = async (id, updatedWord) => {
 		try {
-			await fetch(`http://itgirlschool.justmakeit.ru/api/words/${id}`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(updatedWord),
-			});
-			setWords((prevWords) =>
-				prevWords.map((word) => (word.id === id ? updatedWord : word))
+			console.log('Отправляю PUT-запрос:', id, updatedWord);
+
+			const response = await fetch(
+				`http://itgirlschool.justmakeit.ru/api/words/${id}`,
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(updatedWord),
+				}
 			);
-		} catch {
-			setError('Ошибка при обновлении слова');
+
+			const responseData = await response.json();
+			console.log('Ответ сервера:', response.status, responseData);
+
+			if (!response.ok)
+				throw new Error(`Ошибка обновления слова: ${responseData.message}`);
+
+			// Обновляем локальный список слов, не запрашивая заново с сервера
+			setWords((prevWords) =>
+				prevWords.map((word) =>
+					word.id === id ? { ...word, ...updatedWord } : word
+				)
+			);
+		} catch (error) {
+			console.error(error);
+			setError(error.message);
 		}
 	};
 
 	const deleteWord = async (id) => {
 		try {
-			await fetch(`http://itgirlschool.justmakeit.ru/api/words/${id}`, {
-				method: 'DELETE',
-			});
+			console.log('Отправляю DELETE-запрос:', id);
+			const response = await fetch(
+				`http://itgirlschool.justmakeit.ru/api/words/${id}`,
+				{
+					method: 'DELETE',
+				}
+			);
+
+			const responseText = await response.text();
+			console.log('Ответ сервера:', response.status, responseText);
+
+			if (!response.ok)
+				throw new Error(`Ошибка удаления слова: ${responseText}`);
+
+			// Удаляем слово из локального списка
 			setWords((prevWords) => prevWords.filter((word) => word.id !== id));
-		} catch {
-			setError('Ошибка при удалении слова');
+		} catch (error) {
+			console.error(error);
+			setError(error.message);
 		}
 	};
 

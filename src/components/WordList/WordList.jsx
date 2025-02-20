@@ -134,7 +134,10 @@ const WordList = () => {
 											</button>
 											<button
 												className='cancel-btn'
-												onClick={() => setEditWordId(null)}>
+												onClick={() => {
+													setEditWordId(null);
+													setHasErrors(false);
+												}}>
 												Отмена
 											</button>
 										</>
@@ -147,7 +150,11 @@ const WordList = () => {
 											</button>
 											<button
 												className='delete-btn'
-												onClick={() => deleteWord(word.id)}>
+												onClick={() => {
+													if (window.confirm('Вы уверены?')) {
+														deleteWord(word.id);
+													}
+												}}>
 												Удалить
 											</button>
 										</>
