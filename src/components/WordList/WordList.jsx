@@ -1,31 +1,30 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { WordContext } from '../WordContext/WordContext';
+import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { wordStore } from '../../store/WordStore';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import WordForm from '../WordForm/WordForm';
 import './WordList.css';
 
-const WordList = () => {
-	const { words, loading, error, addWord, updateWord, deleteWord } =
-		useContext(WordContext);
+const WordList = observer(() => {
 	const [showLoading, setShowLoading] = useState(true);
 	const [editWordId, setEditWordId] = useState(null);
 	const [editEnglish, setEditEnglish] = useState('');
 	const [editRussian, setEditRussian] = useState('');
-	const [newEnglish, setNewEnglish] = useState('');
-	const [newRussian, setNewRussian] = useState('');
 	const [hasErrors, setHasErrors] = useState(false);
 
 	useEffect(() => {
-		if (!loading) {
-			const timer = setTimeout(() => {
-				setShowLoading(false);
-			}, 1000); // задержка для показа анимации загрузки
-			return () => clearTimeout(timer);
-		}
-	}, [loading]);
+		wordStore.fetchWords();
 
-	if (showLoading) return <LoadingSpinner />;
-	if (error) return <ErrorMessage message={error} />;
+		const timer = setTimeout(() => {
+			setShowLoading(false);
+		}, 1000); // Задержка 1 секунда
+		return () => clearTimeout(timer);
+	}, []);
+
+	if (wordStore.loading || showLoading) return <LoadingSpinner />;
+
+	if (wordStore.error) return <ErrorMessage message={wordStore.error} />;
 
 	const handleEdit = (word) => {
 		setEditWordId(word.id);
@@ -39,45 +38,32 @@ const WordList = () => {
 			setHasErrors(true);
 			return;
 		}
-		updateWord(id, { id, english: editEnglish, russian: editRussian });
+		wordStore.updateWord(id, {
+			id,
+			english: editEnglish,
+			russian: editRussian,
+		});
 		setEditWordId(null);
 		setHasErrors(false);
 	};
 
-	const handleAdd = () => {
-		if (!newEnglish.trim() || !newRussian.trim()) return;
-		addWord({ id: Date.now(), english: newEnglish, russian: newRussian });
-		setNewEnglish('');
-		setNewRussian('');
+	const handleAddWord = (newWord) => {
+		wordStore.addWord({ id: Date.now(), ...newWord });
+	};
+
+	const handleDelete = (id) => {
+		const isConfirmed = window.confirm(
+			'Вы уверены, что хотите удалить это слово?'
+		);
+		if (isConfirmed) {
+			wordStore.deleteWord(id);
+		}
 	};
 
 	return (
 		<div>
-			<div className='add-word-form'>
-				<input
-					type='text'
-					placeholder='Новое слово'
-					value={newEnglish}
-					onChange={(e) => setNewEnglish(e.target.value)}
-					className={!newEnglish.trim() ? 'error' : ''}
-				/>
-				<input
-					type='text'
-					placeholder='Перевод'
-					value={newRussian}
-					onChange={(e) => setNewRussian(e.target.value)}
-					className={!newRussian.trim() ? 'error' : ''}
-				/>
-				<button
-					onClick={handleAdd}
-					disabled={!newEnglish.trim() || !newRussian.trim()}
-					className={
-						!newEnglish.trim() || !newRussian.trim() ? 'disabled' : ''
-					}>
-					Добавить слово
-				</button>
-			</div>
-			{words.length === 0 ? (
+			<WordForm onAdd={handleAddWord} />
+			{wordStore.words.length === 0 ? (
 				<p className='no-words-message'>Доступных слов нет.</p>
 			) : (
 				<table className='word-table'>
@@ -89,7 +75,7 @@ const WordList = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{words.map((word) => (
+						{wordStore.words.map((word) => (
 							<tr key={word.id}>
 								<td>
 									{editWordId === word.id ? (
@@ -123,21 +109,14 @@ const WordList = () => {
 									{editWordId === word.id ? (
 										<>
 											<button
-												className={
-													!editEnglish.trim() || !editRussian.trim()
-														? 'disabled'
-														: ''
-												}
+												className='save-btn'
 												onClick={() => handleSave(word.id)}
 												disabled={!editEnglish.trim() || !editRussian.trim()}>
 												Сохранить
 											</button>
 											<button
 												className='cancel-btn'
-												onClick={() => {
-													setEditWordId(null);
-													setHasErrors(false);
-												}}>
+												onClick={() => setEditWordId(null)}>
 												Отмена
 											</button>
 										</>
@@ -150,11 +129,7 @@ const WordList = () => {
 											</button>
 											<button
 												className='delete-btn'
-												onClick={() => {
-													if (window.confirm('Вы уверены?')) {
-														deleteWord(word.id);
-													}
-												}}>
+												onClick={() => handleDelete(word.id)}>
 												Удалить
 											</button>
 										</>
@@ -170,6 +145,6 @@ const WordList = () => {
 			)}
 		</div>
 	);
-};
+});
 
 export default WordList;

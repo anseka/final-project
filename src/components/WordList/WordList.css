@@ -88,11 +88,11 @@ button:active {
 	transform: scale(0.95);
 }
 
-button:disabled {
-	background-color: #ccc !important;
-	color: #666 !important;
-	cursor: not-allowed !important;
-	transform: none !important;
+.save-btn:disabled {
+	background-color: #ccc;
+	color: #666;
+	cursor: not-allowed;
+	transform: none;
 }
 
 .add-word-form button:not(.disabled) {
